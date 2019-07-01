@@ -10,7 +10,7 @@ class ReviewItem extends React.Component{
             <View style={styles.maincontainer}>
 
                 <View style={styles.left_container}>
-                    <Text>{review}</Text>
+                    <Text>{review.text}</Text>
 
                 </View>
                 <View style={styles.right_container}>
