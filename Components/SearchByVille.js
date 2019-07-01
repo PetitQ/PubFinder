@@ -1,0 +1,138 @@
+import React from 'react';
+import {ActivityIndicator, FlatList, Picker, StyleSheet, TouchableOpacity, Image, View} from 'react-native';
+import {getBarByVille} from '../API/YelpAPI';
+import BarItem from './BarItem.js';
+
+
+class SearchByVille extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            bars:[],
+            isLoading: false,
+            selectedvalue:{ ville: "Bordeaux", coords: "44.836151/-0.580816" }
+        }
+        this.villes = [
+            { ville: "Bordeaux", coords: "44.836151/-0.580816" },
+            { ville: "Rennes", coords: "48.117266/-1.6777926" },
+            { ville: "Marseille", coords: "43.29695/5.38107"},
+            { ville: "New york ", coords: "40.730610/-73.935242"}
+        ]
+
+    }
+
+    displayLoading(){
+        if(this.state.isLoading){
+            return(
+                <View style={styles.loading_container}>
+                    <ActivityIndicator size='large'/>
+                </View>
+            )
+        }
+    }
+
+    componentDidMount(){
+        //console.log(this.state.bars)
+        this.setState({
+            isLoading: true
+        })
+        const coords = this.state.selectedvalue.coords.split("/");
+        getBarByVille(coords[0],coords[1]).then(responseJson => {
+            this.setState({
+                bars: [ ...this.state.bars, ...responseJson.businesses],
+                isLoading: false
+            })
+        })
+    }
+
+    reloadBars(latitude, longitude){
+        this.setState({
+            bars: [],
+            isLoading: true
+        })
+        getBarByVille(latitude, longitude).then(responseJson => {
+            this.setState({
+                bars: responseJson.businesses,
+                isLoading: false
+            })
+        })
+    }
+
+    displayDetailForBar = (idBar) => {
+        this.props.navigation.navigate('BarDetail', {idBar:idBar})
+    }
+
+
+    render() {
+
+        let serviceItems = this.villes.map( (s, i) => {
+            return <Picker.Item key={i} value={s.coords} label={s.ville} />
+        });
+
+        return (
+
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Picker
+                        style={[styles.picker]}
+                        itemStyle={{height: 74}}
+                        selectedValue={this.state.selectedvalue}
+                        style={{height: 50, width: 100}}
+                        onValueChange={(itemValue) =>{
+                            this.setState({selectedvalue: itemValue})
+                            const coords = itemValue.split("/");
+                            this.reloadBars(coords[0],coords[1]);
+                        }}>
+                        {serviceItems}
+                    </Picker>
+                    <TouchableOpacity onPress={()=>
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                this.reloadBars(position.coords.latitude,position.coords.longitude)
+                            },
+                            (error) => console.log('error:' + error.message ),
+                            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+                        )
+                    }>
+                        <Image
+                            source={require('../Helpers/Image/location-pointer.png')}
+                            style={styles.icon}/>
+                    </TouchableOpacity>
+                </View>
+                <FlatList
+                    key="flatList"
+                    data={this.state.bars}
+                    keyExtractor = {(item, index) => (`${item}--${index}`)}
+                    renderItem={({item}) => <BarItem
+                        bar={item}
+                        index={this.state.bars.indexOf(item)+1}
+                        displayDetailForBar={this.displayDetailForBar}
+                    />}/>
+                {this.displayLoading()}
+            </View>
+        )
+    }
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    header:{
+        flexDirection:"row"
+    },
+    picker: {
+        width: 200,
+        backgroundColor: '#FFF0E0',
+        borderColor: 'black',
+        borderWidth: 1,
+    },
+    icon:{
+        height:40,
+        width:40
+    }
+});
+
+
+export default SearchByVille
