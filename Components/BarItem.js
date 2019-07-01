@@ -7,6 +7,10 @@ class BarItem extends React.Component{
         const index= this.props.index;
         const bar= this.props.bar;
         const displayDetailForBar = this.props.displayDetailForBar;
+        //const AfficheDistance = this.props.AfficheDistance;
+        //const meter = AfficheDistance(bar.coordinates.longitude,bar.coordinates.latitude)
+        //console.log(meter)
+
         return(
             <TouchableOpacity onPress={()=>
                 displayDetailForBar(bar.id)
@@ -20,6 +24,7 @@ class BarItem extends React.Component{
                     <Text style={styles.address}>{bar.location.address1}, {bar.location.city}</Text>
                 </View>
                 <View style={styles.right_container}>
+
                 </View>
 
             </TouchableOpacity>

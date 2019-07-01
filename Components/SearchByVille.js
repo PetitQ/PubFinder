@@ -46,6 +46,43 @@ class SearchByVille extends React.Component {
         })
     }
 
+   /* degrees_to_radians(degrees)
+    {
+        var pi = Math.PI;
+        return degrees * (pi/180);
+    }
+
+
+
+    CalculDistance(latitude1, longitude1, latitude2, longitude2){
+        var earth_radius = 6378137;
+        var rlo1 = this.degrees_to_radians(longitude1);
+        var rla1 = this.degrees_to_radians(latitude1);
+        var rlo2 = this.degrees_to_radians(longitude2);
+        var rla2 = this.degrees_to_radians(latitude2);
+        var dlo = (rlo2 - rlo1) / 2;
+        var dla = (rla2 - rla1) / 2;
+        var a = (Math.sin(dla) * Math.sin(dla)) + Math.cos(rla1) * Math.cos(rla2) * (Math.sin(dlo) * Math.sin(dlo));
+        var d = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        var meter = (earth_radius * d);
+
+        return (meter/1000);
+
+    }
+
+    AfficheDistance(longitude2, latitude2){
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                var meter = this.CalculDistance(position.coords.latitude,position.coords.longitude,longitude2,latitude2)
+                return(meter)
+            },
+            (error) => console.log('error:' + error.message ),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+        )
+
+    }*/
+
     reloadBars(latitude, longitude){
         this.setState({
             bars: [],
@@ -108,6 +145,7 @@ class SearchByVille extends React.Component {
                         bar={item}
                         index={this.state.bars.indexOf(item)+1}
                         displayDetailForBar={this.displayDetailForBar}
+                        //AfficheDistance ={this.AfficheDistance}
                     />}/>
                 {this.displayLoading()}
             </View>
