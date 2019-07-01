@@ -1,6 +1,7 @@
- import { createStackNavigator, createAppContainer } from "react-navigation";
+import { createStackNavigator, createAppContainer, createBottomTabNavigator } from "react-navigation";
 import SearchByVille from '../Components/SearchByVille'
- import BarDetail from '../Components/BarDetail'
+import BarDetail from '../Components/BarDetail'
+import Map from '../Components/Map'
 
 const SearchStackNavtigator = createStackNavigator({
     SearchByVille:{
@@ -17,5 +18,14 @@ const SearchStackNavtigator = createStackNavigator({
     }
 })
 
+const PubTabNavigator = createBottomTabNavigator({
+    Search: {
+        screen: SearchStackNavtigator
+    },
+    Map: {
+        screen: Map
+    }
+})
 
- export default createAppContainer(SearchStackNavtigator)
+
+export default createAppContainer(PubTabNavigator)
