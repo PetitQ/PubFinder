@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text,View, TouchableOpacity} from 'react-native';
 
-class Map extends React.Component{
+class Favorites extends React.Component{
 
     render(){
 
         return(
-            <Text>map</Text>
+            <Text>favorites</Text>
 
         )
     }
@@ -15,4 +15,4 @@ class Map extends React.Component{
 const styles = StyleSheet.create({
 
 })
-export default Map
+export default Favorites
