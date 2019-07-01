@@ -76,12 +76,12 @@ class BarDetail extends React.Component{
                 console.log(this.state.review.reviews[0])
                 console.log('------------------------')
                 return(
-                    <ReviewItem
+                    <FlatList
                         key="flatList"
                         data={this.state.review.reviews}
                         keyExtractor = {(item, index) => (`${item}--${index}`)}
-                        renderItem={({item}) => <BarItem
-                            review={item.text}
+                        renderItem={({item}) => <ReviewItem
+                            review={item}
                         />}/>
                 )
             }else{
