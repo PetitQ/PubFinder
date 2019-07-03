@@ -18,6 +18,12 @@ const SearchStackNavtigator = createStackNavigator({
         navigationOptions:{
             title:"Détail"
         }
+    },
+    Favorites:{
+        screen: Favorites,
+        navigationOptions:{
+            title:"Favoris"
+        }
     }
 })
 

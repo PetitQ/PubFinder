@@ -2,7 +2,7 @@ import React from 'react';
 import {ActivityIndicator, FlatList, Picker, StyleSheet, TouchableOpacity, Image, View} from 'react-native';
 import {getBarByVille} from '../API/YelpAPI';
 import BarItem from './BarItem.js';
-
+import { connect } from 'react-redux'
 
 class SearchByVille extends React.Component {
 
@@ -140,11 +140,13 @@ class SearchByVille extends React.Component {
                 <FlatList
                     key="flatList"
                     data={this.state.bars}
+                    extraData={this.props.favoritesBar}
                     keyExtractor = {(item, index) => (`${item}--${index}`)}
                     renderItem={({item}) => <BarItem
                         bar={item}
                         index={this.state.bars.indexOf(item)+1}
                         displayDetailForBar={this.displayDetailForBar}
+                        isBarFavorite={(this.props.favoritesBar.findIndex(bar => bar.id === item.id) !== -1) ? true : false}
                         //AfficheDistance ={this.AfficheDistance}
                     />}/>
                 {this.displayLoading()}
@@ -172,5 +174,9 @@ const styles = StyleSheet.create({
     }
 });
 
-
-export default SearchByVille
+const mapStateToProps = state => {
+    return {
+        favoritesBar: state.favoritesBar
+    }
+}
+export default connect(mapStateToProps)(SearchByVille)

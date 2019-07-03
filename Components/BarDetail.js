@@ -1,11 +1,12 @@
 import React from 'react';
-import {StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, FlatList} from 'react-native';
+import {StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, FlatList,TouchableOpacity} from 'react-native';
 import BarItem from "./BarItem";
 import {getBarDetail, getBarReview} from '../API/YelpAPI';
 import FlexImage from 'react-native-flex-image';
 import { Rating } from 'react-native-ratings';
 import Carousel from 'react-native-snap-carousel'
 import ReviewItem from './ReviewItem.js';
+import { connect } from 'react-redux'
 
 class BarDetail extends React.Component{
 
@@ -36,6 +37,11 @@ class BarDetail extends React.Component{
         );
     }
 
+    toggleFavorite() {
+        const action = { type: "TOGGLE_FAVORITE", value: this.state.bar }
+        this.props.dispatch(action)
+    }
+
     displayBanniere(){
         /*if(this.state.bar.image_url != ""){
             return(
@@ -55,7 +61,18 @@ class BarDetail extends React.Component{
         }
     }
 
-
+    displayFavoriteImage() {
+        var sourceImage = require('../Helpers/Image/ic_favorite_border.png')
+        if (this.props.favoritesBar.findIndex(item => item.id === this.state.bar.id) !== -1) {
+            sourceImage = require('../Helpers/Image/ic_favorite.png')
+        }
+        return (
+            <Image
+                style={styles.favorite_image}
+                source={sourceImage}
+            />
+        )
+    }
 
     displayIsOuvert(){
         if(this.state.bar.is_closed == false){
@@ -106,6 +123,11 @@ class BarDetail extends React.Component{
                         />
                         <Text style={styles.rateCount}>{this.state.bar.review_count} avis</Text>
                         <Text>{this.state.bar.categories.map(function(categ){return categ.title;}).join(", ")}</Text>
+                        <TouchableOpacity
+                            style={styles.favorite_container}
+                            onPress={() => this.toggleFavorite()}>
+                            {this.displayFavoriteImage()}
+                        </TouchableOpacity>
                         {this.displayReview()}
                         {this.displayIsOuvert()}
                     </View>
@@ -148,9 +170,16 @@ const styles = StyleSheet.create({
     maincontainer: {
         flex:1
     },
+    favorite_container: {
+        alignItems: 'center', // Alignement des components enfants sur l'axe secondaire, X ici
+    },
     banniere:{
         flex:3,
         height:200
+    },
+    favorite_image: {
+        width: 40,
+        height: 40
     },
     content:{
         flex:5,
@@ -173,4 +202,18 @@ const styles = StyleSheet.create({
     },
 
 })
-export default BarDetail
+
+
+const mapStateToProps = (state) => {
+    return {
+        favoritesBar: state.favoritesBar
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatch: (action) => { dispatch(action) }
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(BarDetail)

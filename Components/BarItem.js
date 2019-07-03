@@ -1,7 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text,View, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text,View, TouchableOpacity,Image} from 'react-native';
 
 class BarItem extends React.Component{
+
+
+    displayFavoriteImage() {
+        if (this.props.isBarFavorite) {
+            return (
+                <Image
+                    style={styles.favorite_image}
+                    source={require('../Helpers/Image/ic_favorite.png')}
+                />
+            )
+        }
+    }
+
 
     render(){
         const index= this.props.index;
@@ -24,7 +37,7 @@ class BarItem extends React.Component{
                     <Text style={styles.address}>{bar.location.address1}, {bar.location.city}</Text>
                 </View>
                 <View style={styles.right_container}>
-
+                    {this.displayFavoriteImage()}
                 </View>
 
             </TouchableOpacity>
@@ -63,6 +76,11 @@ const styles = StyleSheet.create({
     },
     right_container:{
         flex:2,
+    },
+    favorite_image: {
+        width: 25,
+        height: 25,
+        marginRight: 5
     }
 })
 export default BarItem
