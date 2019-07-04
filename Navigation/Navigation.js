@@ -18,11 +18,20 @@ const SearchStackNavtigator = createStackNavigator({
         navigationOptions:{
             title:"Détail"
         }
-    },
+    }
+})
+
+const FavoriteStackNavtigator = createStackNavigator({
     Favorites:{
         screen: Favorites,
         navigationOptions:{
             title:"Favoris"
+        }
+    },
+    BarDetail:{
+        screen: BarDetail,
+        navigationOptions:{
+            title:"Détail"
         }
     }
 })
@@ -50,7 +59,7 @@ const PubTabNavigator = createBottomTabNavigator(
             }
         },
         Favorites: {
-            screen: Favorites,
+            screen: FavoriteStackNavtigator,
             navigationOptions: {
                 tabBarIcon: () => {
                     return <Image

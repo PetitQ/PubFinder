@@ -5,7 +5,6 @@ class ReviewItem extends React.Component{
 
     render(){
         const review= this.props.review;
-        console.log(review)
         return(
             <View style={styles.maincontainer}>
 

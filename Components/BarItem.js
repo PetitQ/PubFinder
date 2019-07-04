@@ -15,14 +15,19 @@ class BarItem extends React.Component{
         }
     }
 
+    displayDistance(item){
+        if(this.props.isPosition){
+            return(
+                <Text style={styles.distance}>{Math.round(item.distance)}m</Text>
+            )
+        }
+    }
+
 
     render(){
         const index= this.props.index;
         const bar= this.props.bar;
         const displayDetailForBar = this.props.displayDetailForBar;
-        //const AfficheDistance = this.props.AfficheDistance;
-        //const meter = AfficheDistance(bar.coordinates.longitude,bar.coordinates.latitude)
-        //console.log(meter)
 
         return(
             <TouchableOpacity onPress={()=>
@@ -38,6 +43,7 @@ class BarItem extends React.Component{
                 </View>
                 <View style={styles.right_container}>
                     {this.displayFavoriteImage()}
+                    {this.displayDistance(bar)}
                 </View>
 
             </TouchableOpacity>
@@ -54,6 +60,9 @@ const styles = StyleSheet.create({
         borderTopWidth:0.5,
         marginTop:10,
         marginBottom:10
+    },
+    distance:{
+        textAlign: 'right'
     },
     image:{
         width: 120,
@@ -73,14 +82,17 @@ const styles = StyleSheet.create({
     },
     left_container:{
         flex:5,
+        marginLeft:5
     },
     right_container:{
         flex:2,
+        marginRight:5,
+        alignItems: 'flex-end'
     },
     favorite_image: {
         width: 25,
         height: 25,
-        marginRight: 5
+        marginRight: 5,
     }
 })
 export default BarItem

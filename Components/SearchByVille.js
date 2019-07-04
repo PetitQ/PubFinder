@@ -3,6 +3,7 @@ import {ActivityIndicator, FlatList, Picker, StyleSheet, TouchableOpacity, Image
 import {getBarByVille} from '../API/YelpAPI';
 import BarItem from './BarItem.js';
 import { connect } from 'react-redux'
+import Text from "react-native-web/src/exports/Text";
 
 class SearchByVille extends React.Component {
 
@@ -11,7 +12,8 @@ class SearchByVille extends React.Component {
         this.state = {
             bars:[],
             isLoading: false,
-            selectedvalue:{ ville: "Bordeaux", coords: "44.836151/-0.580816" }
+            selectedvalue:{ ville: "Bordeaux", coords: "44.836151/-0.580816" },
+            isPosition:false
         }
         this.villes = [
             { ville: "Bordeaux", coords: "44.836151/-0.580816" },
@@ -32,8 +34,9 @@ class SearchByVille extends React.Component {
         }
     }
 
+
+
     componentDidMount(){
-        //console.log(this.state.bars)
         this.setState({
             isLoading: true
         })
@@ -46,49 +49,25 @@ class SearchByVille extends React.Component {
         })
     }
 
-   /* degrees_to_radians(degrees)
-    {
-        var pi = Math.PI;
-        return degrees * (pi/180);
-    }
 
 
+    reloadBars(latitude, longitude, IsPosition){
+        if(IsPosition){
+            this.setState({
+                bars: [],
+                isLoading: true,
+                isPosition:true
+            })
+        }else{
+            this.setState({
+                bars: [],
+                isLoading: true,
+                isPosition: false
+            })
+        }
 
-    CalculDistance(latitude1, longitude1, latitude2, longitude2){
-        var earth_radius = 6378137;
-        var rlo1 = this.degrees_to_radians(longitude1);
-        var rla1 = this.degrees_to_radians(latitude1);
-        var rlo2 = this.degrees_to_radians(longitude2);
-        var rla2 = this.degrees_to_radians(latitude2);
-        var dlo = (rlo2 - rlo1) / 2;
-        var dla = (rla2 - rla1) / 2;
-        var a = (Math.sin(dla) * Math.sin(dla)) + Math.cos(rla1) * Math.cos(rla2) * (Math.sin(dlo) * Math.sin(dlo));
-        var d = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        var meter = (earth_radius * d);
-
-        return (meter/1000);
-
-    }
-
-    AfficheDistance(longitude2, latitude2){
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                var meter = this.CalculDistance(position.coords.latitude,position.coords.longitude,longitude2,latitude2)
-                return(meter)
-            },
-            (error) => console.log('error:' + error.message ),
-            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-        )
-
-    }*/
-
-    reloadBars(latitude, longitude){
-        this.setState({
-            bars: [],
-            isLoading: true
-        })
         getBarByVille(latitude, longitude).then(responseJson => {
+            console.log(responseJson)
             this.setState({
                 bars: responseJson.businesses,
                 isLoading: false
@@ -119,14 +98,14 @@ class SearchByVille extends React.Component {
                         onValueChange={(itemValue) =>{
                             this.setState({selectedvalue: itemValue})
                             const coords = itemValue.split("/");
-                            this.reloadBars(coords[0],coords[1]);
+                            this.reloadBars(coords[0],coords[1], false);
                         }}>
                         {serviceItems}
                     </Picker>
                     <TouchableOpacity onPress={()=>
                         navigator.geolocation.getCurrentPosition(
                             (position) => {
-                                this.reloadBars(position.coords.latitude,position.coords.longitude)
+                                this.reloadBars(position.coords.latitude,position.coords.longitude, true)
                             },
                             (error) => console.log('error:' + error.message ),
                             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
@@ -146,8 +125,8 @@ class SearchByVille extends React.Component {
                         bar={item}
                         index={this.state.bars.indexOf(item)+1}
                         displayDetailForBar={this.displayDetailForBar}
+                        isPosition = {this.state.isPosition}
                         isBarFavorite={(this.props.favoritesBar.findIndex(bar => bar.id === item.id) !== -1) ? true : false}
-                        //AfficheDistance ={this.AfficheDistance}
                     />}/>
                 {this.displayLoading()}
             </View>
@@ -160,7 +139,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header:{
-        flexDirection:"row"
+        flexDirection:"row",
+
     },
     picker: {
         width: 200,
@@ -169,8 +149,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     icon:{
-        height:40,
-        width:40
+        height:30,
+        width:30,
+        marginTop:5
     }
 });
 
