@@ -18,12 +18,30 @@ const SearchStackNavtigator = createStackNavigator({
     }
 })
 
+const MapStackNavtigator = createStackNavigator({
+    Map:{
+        screen:Map,
+        navigationOptions:{
+            title:"Carte des bars"
+        }
+    },
+    BarDetail:{
+        screen: BarDetail,
+        navigationOptions:{
+            title:"Détail"
+        }
+    }
+})
+
 const PubTabNavigator = createBottomTabNavigator({
     Search: {
         screen: SearchStackNavtigator
     },
     Map: {
-        screen: Map
+        screen: MapStackNavtigator,
+        navigationOptions:{
+            title:"Map"
+        }
     }
 })
 

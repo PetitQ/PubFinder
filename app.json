@@ -29,7 +29,12 @@
     "android": {
       "permissions": [
         "ACCESS_FINE_LOCATION"
-      ]
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCXN7EGTwWe_n7FMxiYLgdkJ0kVMgbcFmk"
+        }
+      }
     }
   }
 }
