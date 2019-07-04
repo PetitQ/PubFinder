@@ -1,37 +1,52 @@
-import { createStackNavigator, createAppContainer, createBottomTabNavigator } from "react-navigation";
+import {createStackNavigator, createAppContainer, createBottomTabNavigator} from "react-navigation";
 import SearchByVille from '../Components/SearchByVille'
 import BarDetail from '../Components/BarDetail'
 import Favorites from '../Components/Favorites'
 import Map from '../Components/Map'
 import React from 'react'
-import { StyleSheet, Image } from 'react-native';
+import {StyleSheet, Image} from 'react-native';
 
 const SearchStackNavtigator = createStackNavigator({
-    SearchByVille:{
-        screen:SearchByVille,
-        navigationOptions:{
-            title:"Rechercher"
+    SearchByVille: {
+        screen: SearchByVille,
+        navigationOptions: {
+            title: "Rechercher"
         }
     },
-    BarDetail:{
+    BarDetail: {
         screen: BarDetail,
-        navigationOptions:{
-            title:"Détail"
+        navigationOptions: {
+            title: "Détail"
         }
     }
 })
 
 const FavoriteStackNavtigator = createStackNavigator({
-    Favorites:{
+    Favorites: {
         screen: Favorites,
-        navigationOptions:{
-            title:"Favoris"
+        navigationOptions: {
+            title: "Favoris"
         }
     },
-    BarDetail:{
+    BarDetail: {
         screen: BarDetail,
-        navigationOptions:{
-            title:"Détail"
+        navigationOptions: {
+            title: "Détail"
+        }
+    }
+})
+
+const MapStackNavtigator = createStackNavigator({
+    Map: {
+        screen: Map,
+        navigationOptions: {
+            title: "Carte des bars"
+        }
+    },
+    BarDetail: {
+        screen: BarDetail,
+        navigationOptions: {
+            title: "Détail"
         }
     }
 })
@@ -49,7 +64,7 @@ const PubTabNavigator = createBottomTabNavigator(
             }
         },
         Map: {
-            screen: Map,
+            screen: MapStackNavtigator,
             navigationOptions: {
                 tabBarIcon: () => {
                     return <Image
@@ -79,38 +94,12 @@ const PubTabNavigator = createBottomTabNavigator(
     }
 )
 
-
 const styles = StyleSheet.create({
     icon: {
         width: 30,
         height: 30
-const MapStackNavtigator = createStackNavigator({
-    Map:{
-        screen:Map,
-        navigationOptions:{
-            title:"Carte des bars"
-        }
-    },
-    BarDetail:{
-        screen: BarDetail,
-        navigationOptions:{
-            title:"Détail"
-        }
     }
 })
-
-const PubTabNavigator = createBottomTabNavigator({
-    Search: {
-        screen: SearchStackNavtigator
-    },
-    Map: {
-        screen: MapStackNavtigator,
-        navigationOptions:{
-            title:"Map"
-        }
-    }
-})
-
 
 
 export default createAppContainer(PubTabNavigator)
