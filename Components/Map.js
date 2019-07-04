@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text,View, WebView, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, WebView, TouchableOpacity} from 'react-native';
 import MapView from 'react-native-maps';
 import {PROVIDER_DEFAULT} from 'react-native-maps';
 import {getBarByVille} from "../API/YelpAPI";
@@ -14,7 +14,7 @@ const initialRegion = {
     longitudeDelta: 0.1,
 }
 
-class theMap extends React.Component{
+class theMap extends React.Component {
     map = null;
 
     state = {
@@ -26,12 +26,12 @@ class theMap extends React.Component{
         },
         ready: true,
         filteredMarkers: [],
-        bars:[],
+        bars: [],
         markers: []
     };
 
     setRegion(region) {
-        if(this.state.ready) {
+        if (this.state.ready) {
             setTimeout(() => this.map.animateToRegion(region), 10);
         }
         //this.setState({ region });
@@ -43,26 +43,27 @@ class theMap extends React.Component{
         this.getPubs(this.state.region.latitude, this.state.region.longitude);
     }
 
-    getPubs(lat, long){
+    getPubs(lat, long) {
         getBarByVille(lat, long).then(responseJson => {
-            if(this.state.bars.length > 100){
+            if (this.state.bars.length > 100) {
                 this.setState({
-                    bars : []
+                    bars: []
                 })
             }
-            var lesbars = [ ...this.state.bars, ...responseJson.businesses ];
-            var i = 0;
-            var elements = lesbars.map(function(e) {
+            var lesbars = [...this.state.bars, ...responseJson.businesses];
+            var i =0;
+            var elements = lesbars.map(function (e) {
                 i++;
                 return {
                     id: i,
+                    barId: e.id,
                     latitude: e.coordinates.latitude,
                     longitude: e.coordinates.longitude,
                     name: e.name,
                 }
             });
             this.setState({
-                bars: [ ...this.state.bars, ...responseJson.businesses],
+                bars: [...this.state.bars, ...responseJson.businesses],
                 isLoading: false,
                 markers: elements
             })
@@ -96,13 +97,13 @@ class theMap extends React.Component{
                     }
                 }
             );
-        } catch(e) {
+        } catch (e) {
             alert(e.message || "");
         }
     };
 
     onMapReady = (e) => {
-        if(!this.state.ready) {
+        if (!this.state.ready) {
             this.setState({ready: true});
         }
     };
@@ -114,31 +115,41 @@ class theMap extends React.Component{
         this.getPubs(region.latitude, region.longitude);
     };
 
+    markerClick = (idBar) => {
+        this.props.navigation.navigate('BarDetail', {idBar: idBar})
+    }
+
     render() {
 
-        const { region } = this.state;
+        const {region} = this.state;
 
         return (
             <MapView
                 provider={PROVIDER_DEFAULT}
                 showsUserLocation
-                ref={ map => { this.map = map }}
+                ref={map => {
+                    this.map = map
+                }}
                 initialRegion={initialRegion}
                 onMapReady={this.onMapReady}
                 showsMyLocationButton={false}
                 onRegionChange={this.onRegionChange}
                 onRegionChangeComplete={this.onRegionChangeComplete}
                 style={styles.map}
-                textStyle={{ color: '#bc8b00' }}
+                textStyle={{color: '#bc8b00'}}
                 containerStyle={{backgroundColor: 'white', borderColor: '#BC8B00'}}>
 
                 {this.state.markers.map(marker => {
-                    if (marker.latitude != null && marker.longitude != null)
-                    {
+                    var j = 0;
+                    if (marker.latitude != null && marker.longitude != null) {
+                        j++;
                         return (
                             <MapView.Marker
-                                coordinate={{ latitude : marker.latitude, longitude : marker.longitude }}
+                                key={marker.id}
+                                coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
                                 title={marker.name}
+                                description={"Voir les détails du bar"}
+                                onCalloutPress={() => this.markerClick(marker.barId)}
                             />
                         );
                     }
@@ -150,33 +161,33 @@ class theMap extends React.Component{
 
 const styles = StyleSheet.create({
     maincontainer: {
-        flex:1,
-        flexDirection:'row',
-        marginTop:20,
-        marginBottom:10
+        flex: 1,
+        flexDirection: 'row',
+        marginTop: 20,
+        marginBottom: 10
     },
-    map:{
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      right: 0,
-      left: 0
+    map: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0
     },
-    wait:{
+    wait: {
         position: 'absolute',
         top: 30,
         bottom: 0,
         right: 0,
         left: 0,
-        display:'flex',
+        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
     container: {
         flex: 1,
     },
-    header:{
-        flexDirection:"row"
+    header: {
+        flexDirection: "row"
     },
     picker: {
         width: 200,
@@ -184,9 +195,9 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 1,
     },
-    icon:{
-        height:40,
-        width:40
+    icon: {
+        height: 40,
+        width: 40
     }
 });
 
