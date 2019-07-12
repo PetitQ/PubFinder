@@ -75,13 +75,77 @@ class BarDetail extends React.Component{
     }
 
     displayIsOuvert(){
-        if(this.state.bar.is_closed == false){
+        if(this.state.bar.hours != undefined){
+            if(this.state.bar.hours[0].is_open_now == true){
+                return(
+                    <Text style={styles.ouvert}>Ouvert</Text>
+                )
+            }else{
+                return(
+                    <Text style={styles.ferme}>Fermé</Text>
+                )
+            }
+        }
+    }
+
+    displayHoraire(){
+        if(this.state.bar.hours != undefined){
+            var horaire = this.state.bar.hours[0].open
+            console.log(horaire);
+
+            horaire.forEach(function(element) {
+                switch (element.day) {
+                    case 0:
+                        element.day = 'Lundi';
+                        break;
+                    case 1:
+                        element.day = 'Mardi';
+                        break;
+                    case 2:
+                        element.day = 'Mercredi';
+                        break;
+                    case 3:
+                        element.day = 'Jeudi';
+                        break;
+                    case 4:
+                        element.day = 'Vendredi';
+                        break;
+                    case 5:
+                        element.day = 'Samedi';
+                        break;
+                    case 6:
+                        element.day = 'Dimanche';
+                        break;
+                    default:
+                        console.log('Sorry, we are close');
+                }
+            });
+
+            horaire.forEach(function(element) {
+                var parsed = parseInt(element.start);
+                var start = parsed / 100;
+                start = start.toFixed(2);
+                start = start.toString();
+                element.start = start.replace('.',':');
+            });
+
+            horaire.forEach(function(element) {
+                var parsed = parseInt(element.end);
+                var end = parsed / 100;
+                end = end.toFixed(2)
+                end = end.toString();
+                element.end = end.replace('.',':');
+            });
+
             return(
-                <Text style={styles.ouvert}>Ouvert</Text>
-            )
-        }else{
-            return(
-                <Text style={styles.ferme}>Fermé</Text>
+                <FlatList
+                    key="flatListhoraires"
+                    keyExtractor = {(item, index) => (`${item}--${index}`)}
+                    data={horaire}
+                    renderItem={({item}) =>
+                        <Text>{item.day} : {item.start}-{item.end}</Text>
+                    }
+                />
             )
         }
     }
@@ -128,8 +192,11 @@ class BarDetail extends React.Component{
                             onPress={() => this.toggleFavorite()}>
                             {this.displayFavoriteImage()}
                         </TouchableOpacity>
-                        {this.displayReview()}
                         {this.displayIsOuvert()}
+                        {this.displayHoraire()}
+                        <View style={styles.viewreview}>
+                            {this.displayReview()}
+                        </View>
                     </View>
                 </ScrollView>
             )
@@ -168,7 +235,12 @@ class BarDetail extends React.Component{
 
 const styles = StyleSheet.create({
     maincontainer: {
-        flex:1
+        flex:1,
+        marginRight:5,
+        marginLeft:5,
+    },
+    viewreview:{
+      marginTop:15,
     },
     favorite_container: {
         alignItems: 'center', // Alignement des components enfants sur l'axe secondaire, X ici

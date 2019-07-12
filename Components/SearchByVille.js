@@ -19,7 +19,14 @@ class SearchByVille extends React.Component {
             { ville: "Bordeaux", coords: "44.836151/-0.580816" },
             { ville: "Rennes", coords: "48.117266/-1.6777926" },
             { ville: "Marseille", coords: "43.29695/5.38107"},
-            { ville: "New york ", coords: "40.730610/-73.935242"}
+            { ville: "Lyon", coords: "45.750000/4.850000"},
+            { ville: "Toulouse", coords: "43.600000/1.433333"},
+            { ville: "Nice", coords: "43.700849/7.282986"},
+            { ville: "Montpellier", coords: "43.602920/3.874605"},
+            { ville: "Strasbourg", coords: "48.539430/7.628023"},
+            { ville: "Lille", coords: "50.62925/3.057256"},
+            { ville: "Sables-d'Olonne", coords: "46.500000/-1.7833"},
+            { ville: "Paris", coords: "48.8534/2.3488"}
         ]
 
     }
